@@ -42,7 +42,7 @@ tool (see the corresponding step of Initial Setup section below).
 *   Remove any tab not needed (aside from the ones created by script)
 *   Input the DCM Profile ID in the setup tab (i.e. at cell C5) then select
     _Data_ from the sheet menu and select _Named Ranges...._ to set the title
-    _DCMProfileID_ and value _Setup!C5_
+    _DCMUserProfileID_ and value _Setup!C5_
 
 ## USAGE
 
