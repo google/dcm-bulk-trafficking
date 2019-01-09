@@ -33,6 +33,7 @@ var CAMPAIGNS_SHEET = 'Campaigns';
 var PLACEMENTS_SHEET = 'Placements';
 var ADS_SHEET = 'Ads';
 var CREATIVES_SHEET = 'Creatives';
+var LANDING_PAGES_SHEET = 'LandingPages';
 
 /**
  * Helper function to get DCM Profile ID.
@@ -76,66 +77,94 @@ function setupTabs() {
   _setupPlacementsGroupsSheet();
   _setupAdsSheet();
   _setupCreativesSheet();
+  _setupLandingPagesSheet();
 }
 
 /**
  * Initialize the Setup sheet and its header row
  * @return {object} A handle to the sheet.
 */
-function _setupSetupSheet() {
+function _setupSetupSheet() {  
   var sheet = initializeSheet_(SETUP_SHEET, false);
-
-  sheet.getRange('B2').setValue('DCM Bulk Trafficking');
-  sheet.getRange('E2').setValue('Initial setup:');
-  sheet.getRange('E3').setValue('1) Make a copy of this template trix');
-  sheet.getRange('E4').setValue('2) In Menu, Go to [Tools] > [Script editor]');
-  sheet.getRange('E5').setValue('3) [New browser tab of the appscript]'+
-                                '[Resources] > [Advanced Google Services]');
-  sheet.getRange('E6').setValue('4) [Advanced Google Services] Enable'+
-                                ' \"DCM/DFA Reporting And Trafficking API\"');
-  sheet.getRange('E7').setValue('5) [Advanced Google Services] Click \"Google'+
-                                ' API Console\" at the bottom of the window');
-  sheet.getRange('E8').setValue('6) [New browser tab of cloud project] '+
-                                '[Library] Search and enable \"DCM/DFA '+
-                                'Reporting And Trafficking API\"');
-  sheet.getRange('E9').setValue('7) Go back to appscript tab, select OK and '+
-                                'close the [Advanced Google Services] window');
-
-  sheet.getRange('E12').setValue('How to use:');
-  sheet.getRange('E13').setValue('1) Enter DCM Profile ID in C5 of this tab');
-  sheet.getRange('E14').setValue('2) [Sites tab] Retrieve the list of sites '+
-                                 'and IDs by [DCM Functions] > [List Sites]');
-  sheet.getRange('E15').setValue('3) [Campaigns tab] Bulk create Campaigns by'+
-                                 ' [DCM Functions] > [Bulk Create Campaigns]');
-  sheet.getRange('E16').setValue('4) [Placements tab]  Bulk create Placements'+
-                                 ' groups by [DCM Functions] > '+
-                                 '[Bulk Create Placements]');
-  sheet.getRange('E17').setValue('5) [Ads tab] Bulk create Ads by '+
-                                 '[DCM Functions]>[Bulk Create Ads]');
-  sheet.getRange('E18').setValue('6) [Creatives tab] Bulk create Creatives by'+
-                                 ' [DCM Functions]>[Bulk Create Creatives]');
-
-  sheet.getRange('E21')
-      .setValue('Legends')
-      .setFontWeight('bold')
-      .setFontSize(12);
-  sheet.getRange('E22').setValue('Green Cells / Columns are for input');
-  sheet.getRange('E23').setValue(
-      'Blue Cells /Columns are for the script to populate (do not edit)');
-  sheet.getRange('E21:M21').setBackground('#f9cb9c');
-  sheet.getRange('E22:M22').setBackground(USER_INPUT_HEADER_COLOR);
-  sheet.getRange('E23:M23').setBackground(AUTO_POP_HEADER_COLOR);
-  sheet.getRangeList(['B2:C2','E2:M2','E12:M12'])
+  var cell;
+  
+  sheet.getRange('B2').setValue("DCM Bulk Trafficking");
+  sheet.getRange('B2:C2')
       .setFontWeight('bold')
       .setWrap(true)
-      .setBackground(AUTO_POP_HEADER_COLOR).setFontSize(12);
-  sheet.getRange('B5').setValue('User Profile ID')
+      .setBackground(AUTO_POP_HEADER_COLOR)
+      .setFontSize(12);
+
+  sheet.getRange('B3')
+      .setValue('For any questions contact panesh@ or jenicarawtani@ or toczos@');
+  
+  var instructions = [
+    "Initial setup:",
+    "# Make a copy of this template trix",
+    "# In Menu, Go to [Tools] > [Script editor]",
+    "# [New browser tab of the appscript] [Resources] > "+
+    "[Cloud Platform Project...] If an appscript project "+
+    "is linked, click on it and skip to enabling the API (Step 7)",
+    "# [New browser tab of the appscript] [Resources] > "+
+    "[Cloud Platform Project...] Click 'View API Console'",
+    "# [New browser tab of cloud project] Create a new cloud "+
+    "project and make a note of the project Id",
+    "# [Browser tab of the appscript] [Resources] > "+
+    "[Cloud Platform Project...] Click 'View API Console' and "+
+    "enter the project ID and Click 'Change Project'",
+    "# [New browser tab of cloud project] [Library] Search and "+
+    "enable \"DCM/DFA Reporting And Trafficking API\"",
+    "# [Browser tab of the appscript] [Resources] > "+
+    "[Advanced Google Services]",
+    "# [Advanced Google Services] Enable \"DCM/DFA Reporting And Trafficking API\"",
+    "# Go back to appscript tab, select OK and close the [Advanced Google Services] window",
+    null,
+    null,
+    "How to use:",
+    "# Enter DCM Profile ID in C5 of this tab",
+    "# [Sites tab] Retrieve the list of sites and IDs by [DCM Functions] > [List Sites]",
+    "# [Campaigns tab] Bulk create Campaigns by [DCM Functions] > [Bulk Create Campaigns]",
+    "# [Placements tab]  Bulk create Placements groups by [DCM Functions] > [Bulk Create Placements]",
+    "# [Ads tab] Bulk create Ads by [DCM Functions] > [Bulk Create Ads]",
+    "# [Creatives tab] Bulk create Creatives by [DCM Functions] > [Bulk Create Creatives]",
+    "# [LandingPages tab] Bulk create Landing Pages by [DCM Functions] > [Bulk Create Landing Pages]"
+  ]
+  
+  for(var i=0; i<instructions.length; i++) {
+    cell = i+2
+    var count = instructions[i] == null ? -1 : (i==0 ? 0 : count+1);
+    var value = instructions[i] == null ? null : instructions[i].replace('#', count + ')');
+    sheet.getRange('E' + cell).setValue(value);
+    
+    if (count == 0) {
+      sheet.getRange('E' + cell + ':M' + cell)
+        .setFontWeight("bold")
+        .setWrap(true)
+        .setBackground(AUTO_POP_HEADER_COLOR)
+        .setFontSize(12);
+    }
+  }
+    
+  sheet.getRange('E' + (cell+3)).setValue("Legends")
+      .setFontWeight("bold")
+      .setFontSize(12);
+  sheet.getRange('E' + (cell+4))
+      .setValue("Green Cells / Columns are for input");
+  sheet.getRange('E' + (cell+5))
+      .setValue("Blue Cells /Columns are for the script to populate (do not edit)");
+  
+  sheet.getRange('E' + (cell+3) + ':M' + (cell+3))
+      .setBackground("#f9cb9c");
+  sheet.getRange('E' + (cell+4) + ':M' + (cell+4))
+      .setBackground(USER_INPUT_HEADER_COLOR);
+  sheet.getRange('E' + (cell+5) + ':M' + (cell+5))
+      .setBackground(AUTO_POP_HEADER_COLOR);
+  
+  sheet.getRange('B5').setValue("User Profile ID")
                       .setBackground(USER_INPUT_HEADER_COLOR);
   sheet.getRange('C5').setBackground(USER_INPUT_HEADER_COLOR);
-  sheet.getRange('B5:C5')
-      .setFontWeight('bold')
-      .setWrap(true);
 
+  sheet.getRange("B5:C5").setFontWeight("bold").setWrap(true);
   return sheet;
 
 }
@@ -300,3 +329,23 @@ function _setupCreativesSheet() {
   sheet.getRange('A1:H1').setFontWeight('bold').setWrap(true);
   return sheet;
 }
+
+/**
+ * Initialize the LandingPages sheet and its header row
+ * @return {object} A handle to the sheet.
+ */
+function _setupLandingPagesSheet() {
+  var sheet = initializeSheet_(LANDING_PAGES_SHEET, false);
+
+  sheet.getRange('A1').setValue("Advertiser ID*").setBackground(USER_INPUT_HEADER_COLOR);
+  sheet.getRange('B1').setValue("Landing Page Name*").setBackground(USER_INPUT_HEADER_COLOR);
+  sheet.getRange('C1').setValue("Landing Page URL*").setBackground(USER_INPUT_HEADER_COLOR);
+  
+  sheet.getRange('D1').setValue("Landing Page ID (do not edit; auto-filling)")
+      .setBackground(AUTO_POP_HEADER_COLOR);
+  
+  sheet.getRange("A1:H1").setFontWeight("bold").setWrap(true);
+  return sheet;
+}
+
+
