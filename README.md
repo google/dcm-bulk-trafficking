@@ -9,7 +9,7 @@ An example tool to perform bulk tasks using DCM API.
 
 This AppScript-based tool lets you use a Google Spreadsheet to perform bulk
 tasks including - Bulk Create Campaigns - Bulk Create
-Placements - Bulk Create Ads - Bulk Create Creatives
+Placements - Bulk Create Ads - Bulk Create Creatives - Bulk Create Landing Pages.
 
 It uses DCM APIs to pull and push data to DCM.
 
@@ -62,6 +62,8 @@ tool (see the corresponding step of Initial Setup section below).
     Create Ads" from DCM Functions menu.
 *   **Get All Creatives** Fill out the tab _Creatives_ then select "Bulk
     Create Creatives" from DCM Functions menu.
+*   **Bulk Create Landing Pages** Fill out the tab _LandingPages_ then 
+    select "Bulk Create Landing Pages" from DCM Functions menu.
 
 ## CELL FORMATTING
 
