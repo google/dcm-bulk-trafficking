@@ -337,13 +337,19 @@ function _setupCreativesSheet() {
 function _setupLandingPagesSheet() {
   var sheet = initializeSheet_(LANDING_PAGES_SHEET, false);
 
-  sheet.getRange('A1').setValue("Advertiser ID*").setBackground(USER_INPUT_HEADER_COLOR);
-  sheet.getRange('B1').setValue("Landing Page Name*").setBackground(USER_INPUT_HEADER_COLOR);
-  sheet.getRange('C1').setValue("Landing Page URL*").setBackground(USER_INPUT_HEADER_COLOR);
-  
-  sheet.getRange('D1').setValue("Landing Page ID (do not edit; auto-filling)")
+  sheet.getRange('A1')
+      .setValue("Advertiser ID*")
+      .setBackground(USER_INPUT_HEADER_COLOR);
+  sheet.getRange('B1')
+      .setValue("Landing Page Name*")
+      .setBackground(USER_INPUT_HEADER_COLOR);
+  sheet.getRange('C1')
+      .setValue("Landing Page URL*")
+      .setBackground(USER_INPUT_HEADER_COLOR);
+  sheet.getRange('D1')
+      .setValue("Landing Page ID (do not edit; auto-filling)")
       .setBackground(AUTO_POP_HEADER_COLOR);
-  
+      
   sheet.getRange("A1:H1").setFontWeight("bold").setWrap(true);
   return sheet;
 }

@@ -31,6 +31,7 @@ function onOpen() {
       .addItem('Bulk Create Placements', 'createPlacements')
       .addItem('Bulk Create Ads', 'createAds')
       .addItem('Bulk Create Creatives', 'createCreatives')
+      .addItem('Bulk Create Landing Pages', 'createLandingPages')
       .addToUi();
 }
 
@@ -144,6 +145,26 @@ function createCreatives() {
   }
 
   SpreadsheetApp.getUi().alert('Finished creating the creatives!');
+}
+
+/**
+ * Read landing pages information from the sheet and use DCM API to bulk create them
+ * in the DCM Account.
+ */
+function createLandingPages() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(LANDING_PAGES_SHEET);
+  var values = sheet.getDataRange().getValues();
+  
+  for (var i = 1; i < values.length; i++) { // exclude header row
+    var newLandingPage = _createOneLandingPage(ss, values[i]);
+    var rowNum = i+1;
+    sheet.getRange('D' + rowNum)
+        .setValue(newLandingPage.id)
+        .setBackground('lightgray');
+  }
+  
+  SpreadsheetApp.getUi().alert('Finished creating the landing pages!');
 }
 
 /**
@@ -328,4 +349,32 @@ function _createOnePlacement(ss, singlePlacementArray) {
   var newPlacement = DoubleClickCampaigns.Placements
       .insert(placementResource, profileID);
   return newPlacement;
+}
+
+/**
+ * A helper function which creates one landing page via DCM API using information
+ * from the sheet.
+ * @param {object} ss Spreadsheet class object representing current active
+ * spreadsheet
+ * @param {Array} singleLandingPageArray An array containing
+ * landing page information
+ * @return {object} Landing Page object
+ */
+function _createOneLandingPage(ss, singleLandingPageArray) {
+  var profileID = _fetchProfileId();
+  
+  var advertiserId = singleLandingPageArray[0];
+  var name = singleLandingPageArray[1];
+  var url = singleLandingPageArray[2];
+  
+  var landingPageResource = {
+    "advertiserId": advertiserId,
+    "kind": "dfareporting#landingPage",
+    "name": name,
+    "url": url
+  }
+  
+  var newLandingPage = DoubleClickCampaigns.AdvertiserLandingPages
+      .insert(landingPageResource, profileID);
+  return newLandingPage;
 }
